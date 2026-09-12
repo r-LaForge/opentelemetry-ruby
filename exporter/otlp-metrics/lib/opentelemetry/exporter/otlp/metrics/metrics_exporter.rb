@@ -211,6 +211,7 @@ module OpenTelemetry
             nil
           end
 
+          # Builds the ExportMetricsServiceRequest for the given metrics data.
           def as_export_metrics_service_request(metrics_data, json)
             Opentelemetry::Proto::Collector::Metrics::V1::ExportMetricsServiceRequest.new(
               resource_metrics: metrics_data.group_by(&:resource).map do |resource, scope_metrics|
@@ -423,7 +424,6 @@ module OpenTelemetry
             SUCCESS
           end
         end
-        # rubocop:enable Metrics/ClassLength
       end
     end
   end

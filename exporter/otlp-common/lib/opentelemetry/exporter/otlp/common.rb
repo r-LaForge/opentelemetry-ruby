@@ -82,7 +82,8 @@ module OpenTelemetry
 
         private
 
-        def as_otlp_span(span_data, format) # rubocop:disable Metrics/MethodLength
+        def as_otlp_span(span_data, format = :protobuf) # rubocop:disable Metrics/MethodLength
+          parent_span_id = span_data.parent_span_id == OpenTelemetry::Trace::INVALID_SPAN_ID ? nil : span_data.parent_span_id
           Opentelemetry::Proto::Trace::V1::Span.new(
             trace_id: format_id(span_data.trace_id, format),
             span_id: format_id(span_data.span_id, format),
@@ -142,6 +143,16 @@ module OpenTelemetry
           flags = base_flags_int | has_remote_mask
           flags |= is_remote_mask if parent_span_is_remote
           flags
+        end
+
+        # OTLP/JSON requires trace/span ids as hex, but protobuf JSON base64-encodes.
+        # For the JSON path, applying initial base64 decoding to the hex string
+        # yields bytes that protobuf re-encodes back into that hex string.
+        def format_id(id_bytes, format)
+          return id_bytes unless format == :json
+          return id_bytes if id_bytes.nil? || id_bytes.empty?
+
+          id_bytes.unpack1('H*').unpack1('m0')
         end
 
         def as_otlp_status_code(code)

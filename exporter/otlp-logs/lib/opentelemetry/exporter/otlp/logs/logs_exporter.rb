@@ -49,7 +49,7 @@ module OpenTelemetry
             end
           end
 
-          # rubocop:disable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+          # rubocop:disable-next Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
           def initialize(endpoint: OpenTelemetry::Common::Utilities.config_opt('OTEL_EXPORTER_OTLP_LOGS_ENDPOINT', 'OTEL_EXPORTER_OTLP_ENDPOINT', default: 'http://localhost:4318/v1/logs'),
                          certificate_file: OpenTelemetry::Common::Utilities.config_opt('OTEL_EXPORTER_OTLP_LOGS_CERTIFICATE', 'OTEL_EXPORTER_OTLP_CERTIFICATE'),
                          client_certificate_file: OpenTelemetry::Common::Utilities.config_opt('OTEL_EXPORTER_OTLP_LOGS_CLIENT_CERTIFICATE', 'OTEL_EXPORTER_OTLP_CLIENT_CERTIFICATE'),
@@ -79,7 +79,6 @@ module OpenTelemetry
             @content_type = protocol == 'http/json' ? 'application/json' : 'application/x-protobuf'
             @shutdown = false
           end
-          # rubocop:enable Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
 
           # Called to export sampled {OpenTelemetry::SDK::Logs::LogRecordData} structs.
           #
